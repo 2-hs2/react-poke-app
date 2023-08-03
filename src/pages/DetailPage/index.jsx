@@ -23,7 +23,14 @@ function DetailPage() {
         const { name, id, types, weight, height, stats, abilities } =
           pokemonData;
         const nextAndPreviousPokemon = await getNextPreviousPokemon(id);
-        console.log(stats);
+
+        // 8. damage 관계 데이터 가져오기
+        const DamageRealtions = await Promise.all(
+          types.map(async (i) => {
+            const type = await axios.get(i.type.url);
+            return type.data.damage_relations; // 다른 타입과의 데미지 관계를 리턴
+          })
+        );
         // 5. 받아온 해당 포켓몬 데이터를 가공
         const formattedPokemonData = {
           id: id,
@@ -34,7 +41,9 @@ function DetailPage() {
           next: nextAndPreviousPokemon.next,
           abilities: formatPokemonAbilities(abilities),
           stats: formatPokemonStats(stats),
+          DamageRealtions: DamageRealtions,
         };
+        console.log(formattedPokemonData);
       }
     } catch (error) {
       console.error(error);
