@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 function DetailPage() {
+  const [pokemon, setPokemon] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
   const params = useParams();
   const pokemonId = params.id;
   const baseUrl = `http://pokeapi.co/api/v2/pokemon/`;
@@ -43,7 +46,10 @@ function DetailPage() {
           stats: formatPokemonStats(stats),
           DamageRealtions: DamageRealtions,
         };
-        console.log(formattedPokemonData);
+
+        // 10. 가공이 다 되면 데이터 넣어주고 로딩 상태 false로 변경
+        setPokemon(formattedPokemonData);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -92,6 +98,9 @@ function DetailPage() {
       previous: previousResponse?.data?.results?.[0]?.name,
     };
   }
+
+  // 9. 로딩 중이면 로딩 중이라 띄우기
+  if (isLoading) return <div>...Loading</div>;
 
   return <div>DetailPage</div>;
 }
