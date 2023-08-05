@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { Loading } from '../../assets/Loading';
+import { LessThan } from '../../assets/LessThan';
+import { GreaterThan } from '../../assets/GreaterThan';
 
 function DetailPage() {
   const [pokemon, setPokemon] = useState();
@@ -45,6 +48,7 @@ function DetailPage() {
           abilities: formatPokemonAbilities(abilities),
           stats: formatPokemonStats(stats),
           DamageRealtions: DamageRealtions,
+          types: types.map((type) => type.type.name),
         };
 
         // 10. 가공이 다 되면 데이터 넣어주고 로딩 상태 false로 변경
@@ -53,6 +57,7 @@ function DetailPage() {
       }
     } catch (error) {
       console.error(error);
+      setIsLoading(false); // 에러인 경우도 해당 페이지에서 로딩이 멈추도록 해줘야 함
     }
   }
 
@@ -100,9 +105,46 @@ function DetailPage() {
   }
 
   // 9. 로딩 중이면 로딩 중이라 띄우기
-  if (isLoading) return <div>...Loading</div>;
+  if (isLoading)
+    return (
+      <div className="absolute h-auto w-auto top-1/3 -translate-x-1/2 left-1/2 z-50">
+        <Loading className="w-12 h-12 z-50 animate-spin text-slate-900" />
+      </div>
+    );
 
-  return <div>DetailPage</div>;
+  if (!isLoading && !pokemon) {
+    <div>...NOT FOUND</div>;
+  }
+
+  const img = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon?.id}.png`;
+  const bg = `bg-${pokemon?.types?.[0]}`;
+  const text = `text-${pokemon?.types?.[0]}`;
+
+  console.log(bg, text);
+  return (
+    <article className="flex items-center gap-1 flex-col w-full">
+      <div
+        className={`${bg} w-auto h-full flex flex-col z-0 items-center justify-end relative overflow-hidden`}
+      >
+        {pokemon.previous && (
+          <Link
+            className="absolute top-[40%] -translate-y-1/2 z-50 left-1"
+            to={`/pokemon/${pokemon.previous}`}
+          >
+            <LessThan className="w-5 h-8 p-1" />
+          </Link>
+        )}
+        {pokemon.next && (
+          <Link
+            className="absolute top-[40%] -translate-y-1/2 z-50 right-1"
+            to={`/pokemon/${pokemon.next}`}
+          >
+            <GreaterThan className="w-5 h-8 p-1" />
+          </Link>
+        )}
+      </div>
+    </article>
+  );
 }
 
 export default DetailPage;
