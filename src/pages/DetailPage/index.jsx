@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Loading } from '../../assets/Loading';
 import { LessThan } from '../../assets/LessThan';
 import { GreaterThan } from '../../assets/GreaterThan';
+import { ArrowLeft } from '../../assets/ArrowLeft';
 
 function DetailPage() {
   const [pokemon, setPokemon] = useState();
@@ -142,6 +143,31 @@ function DetailPage() {
             <GreaterThan className="w-5 h-8 p-1" />
           </Link>
         )}
+        <section className="w-full flex flex-col z-20 items-center justify-end relative h-full">
+          <div className="absolute z-30 top-6 flex items-center w-full justify-between px-2">
+            <div className="flex items-center gap-1">
+              <Link>
+                <ArrowLeft className="w-6 h-8 text-zinc-200" />
+              </Link>
+              <h1 className="text-zinc-200 font-bold text-xl capitalize">
+                {pokemon.name}
+              </h1>
+            </div>
+            <div className="text-zinc-200 font-bold text-md">
+              #{pokemon.id.toString().padStart(3, '00')}
+            </div>
+          </div>
+          <div className="relative h-auto max-w-[15.5rem] z-20 mt-6 -mb-16">
+            <img
+              src={img}
+              width="100%"
+              height="auto"
+              loading="lazy"
+              alt={pokemon.name}
+              className={`object-contain h-full `}
+            />
+          </div>
+        </section>
       </div>
     </article>
   );
