@@ -4,7 +4,6 @@ import Type from './Type';
 const DamageRelations = ({ damages }) => {
   // 가공된 damageRelations 데이터를 가지는 state
   const [damagePokemonForm, setDamagePokemonForm] = useState({});
-  console.log(damagePokemonForm);
   useEffect(() => {
     const arrayDamage = damages.map((damage) =>
       separateObjectBetweenToAndFrom(damage)
