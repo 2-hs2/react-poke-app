@@ -9,6 +9,7 @@ import { Balance } from '../../assets/Balance';
 import { Vector } from '../../assets/Vector';
 import Type from '../../components/Type';
 import BaseStat from '../../components/BaseStat';
+import DamageRelations from '../../components/DamageRelations';
 
 function DetailPage() {
   const [pokemon, setPokemon] = useState();
@@ -42,6 +43,7 @@ function DetailPage() {
             return type.data.damage_relations; // 다른 타입과의 데미지 관계를 리턴
           })
         );
+
         // 5. 받아온 해당 포켓몬 데이터를 가공
         const formattedPokemonData = {
           id: id,
@@ -230,7 +232,8 @@ function DetailPage() {
           {pokemon.DamageRealtions && (
             <div className="w-10/12">
               <h2 className={`text-base text-center font-semibold ${text}`}>
-                데미지 관계
+                {/* 데미지 관계 */}
+                <DamageRelations damages={pokemon.DamageRealtions} />
               </h2>
               데미지
             </div>
