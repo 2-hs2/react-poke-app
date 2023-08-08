@@ -235,7 +235,6 @@ function DetailPage() {
                 {/* 데미지 관계 */}
                 <DamageRelations damages={pokemon.DamageRealtions} />
               </h2>
-              데미지
             </div>
           )}
         </section>
