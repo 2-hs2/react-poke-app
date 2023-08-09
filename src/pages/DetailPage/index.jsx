@@ -59,7 +59,9 @@ function DetailPage() {
           DamageRealtions: DamageRealtions,
           types: types.map((type) => type.type.name),
           sprites: formatPokemonSprites(sprites),
+          description: await getPokemonDescription(id),
         };
+        console.log(formattedPokemonData);
 
         // 10. 가공이 다 되면 데이터 넣어주고 로딩 상태 false로 변경
         setPokemon(formattedPokemonData);
@@ -70,6 +72,28 @@ function DetailPage() {
       setIsLoading(false); // 에러인 경우도 해당 페이지에서 로딩이 멈추도록 해줘야 함
     }
   }
+
+  // 13. pokemonSpecies 데이터에서 한국어로 된 설명 부분만 가져오는 함수
+  const filterAndFormatDescription = (flavorText) => {
+    const koreanDescription = flavorText
+      ?.filter((text) => text.language.name === 'ko')
+      .map((text) => text.flavor_text.replace(/\r|\n|\f/g, ''));
+    return koreanDescription;
+  };
+
+  // 12. description 데이터 가져오는 함수
+  const getPokemonDescription = async (id) => {
+    const url = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
+
+    const { data: pokemonSpecies } = await axios.get(url);
+
+    const descriptions = filterAndFormatDescription(
+      pokemonSpecies.flavor_text_entries
+    );
+
+    // 한국어 설명 중 랜덤으로 보여줌
+    return descriptions[Math.floor(Math.random() * descriptions.length)];
+  };
 
   // 11. spirtes 데이터 가공하는 함수
   const formatPokemonSprites = (sprites) => {
@@ -247,6 +271,11 @@ function DetailPage() {
               </tbody>
             </table>
           </div>
+
+          <h2 className={`text-base font-semibold ${text}`}>설명</h2>
+          <p className="text-md leading-4 font-sans text-zinc-200 max-w-[30rem] text-center">
+            {pokemon.description}
+          </p>
 
           <div className="flex my-8 flex-wrap justify-center">
             {pokemon.sprites.map((url) => (
