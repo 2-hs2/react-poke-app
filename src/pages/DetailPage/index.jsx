@@ -34,7 +34,7 @@ function DetailPage() {
 
       // 3. 포켓몬 데이터를 잘 가져왔다면 데이터들을 destructuring 하고 이전 이후 포켓몬 이름 데이터를 받아오는 함수 호출
       if (pokemonData) {
-        const { name, id, types, weight, height, stats, abilities } =
+        const { name, id, types, weight, height, stats, abilities, sprites } =
           pokemonData;
         const nextAndPreviousPokemon = await getNextPreviousPokemon(id);
 
@@ -58,6 +58,7 @@ function DetailPage() {
           stats: formatPokemonStats(stats),
           DamageRealtions: DamageRealtions,
           types: types.map((type) => type.type.name),
+          sprites: formatPokemonSprites(sprites),
         };
 
         // 10. 가공이 다 되면 데이터 넣어주고 로딩 상태 false로 변경
@@ -69,6 +70,21 @@ function DetailPage() {
       setIsLoading(false); // 에러인 경우도 해당 페이지에서 로딩이 멈추도록 해줘야 함
     }
   }
+
+  // 11. spirtes 데이터 가공하는 함수
+  const formatPokemonSprites = (sprites) => {
+    const newSprites = { ...sprites }; // 원본 변경 없이 복사해오기
+
+    // newSprites에서 해당 key에 대한 값이 string이 아닌 즉 null인 애들 지워주기
+    Object.keys(newSprites).forEach((key) => {
+      if (typeof newSprites[key] != 'string') {
+        delete newSprites[key];
+      }
+    });
+
+    // newSprites의 값들만 반환 즉 이미지 url
+    return Object.values(newSprites);
+  };
 
   // 6. abilities 데이터를 가공
   const formatPokemonAbilities = (abilities) => {
@@ -230,6 +246,12 @@ function DetailPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          <div className="flex my-8 flex-wrap justify-center">
+            {pokemon.sprites.map((url) => (
+              <img key={url} src={url} alt="sprite" />
+            ))}
           </div>
         </section>
       </div>
