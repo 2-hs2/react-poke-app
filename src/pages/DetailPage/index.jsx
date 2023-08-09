@@ -257,7 +257,7 @@ function DetailPage() {
           </div>
 
           <h2 className={`text-base font-semibold ${text}`}>기본 능력치</h2>
-          <div className="w-full">
+          <div className="w-full flex justify-center">
             <table>
               <tbody>
                 {pokemon.stats.map((stat) => (
