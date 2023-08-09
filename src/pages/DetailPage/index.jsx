@@ -23,8 +23,9 @@ function DetailPage() {
 
   // 2. 함수 호출해서 마운트 시에 데이터 받아오기
   useEffect(() => {
-    fetchPokemonData(params.id);
-  }, [params.id]);
+    setIsLoading(true);
+    fetchPokemonData(pokemonId);
+  }, [pokemonId]);
 
   // 1. 포켓몬 데이터 받아오는 함수
   async function fetchPokemonData(id) {
