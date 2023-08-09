@@ -23,12 +23,12 @@ function DetailPage() {
 
   // 2. 함수 호출해서 마운트 시에 데이터 받아오기
   useEffect(() => {
-    fetchPokemonData();
-  }, []);
+    fetchPokemonData(params.id);
+  }, [params.id]);
 
   // 1. 포켓몬 데이터 받아오는 함수
-  async function fetchPokemonData() {
-    const url = `${baseUrl}${pokemonId}`; // 데이터 받아올 url
+  async function fetchPokemonData(id) {
+    const url = `${baseUrl}${id}`; // 데이터 받아올 url
     try {
       const { data: pokemonData } = await axios.get(url); // const reponse = ... 이렇게 가져와서 response.data 이렇게 데이터를 사용하지 않고 바로 {data} destructuring
 
