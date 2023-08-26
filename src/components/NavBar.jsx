@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import styled from "styled-components";
 
 const NavBar = () => {
   // navbar 색상 변경 state
   const [show, setShow] = useState(false);
+
+  const { pathname } = useLocation();
 
   // 스크롤 Y 영역이 50이 넘는 경우 show state true 아닌 경우 false로 set 하는 함수
   const listener = () => {
@@ -35,7 +38,7 @@ const NavBar = () => {
           }}
         />
       </Logo>
-      <Login>로그인</Login>
+      {pathname === "/login" && <Login>로그인</Login>}
     </NavWrapper>
   );
 };
