@@ -47,7 +47,10 @@ const NavBar = () => {
   // 로그인 팝업 생성
   const handleAuth = () => {
     signInWithPopup(auth, provider)
-      .then((result) => setUserData(result.user))
+      .then((result) => {
+        setUserData(result.user);
+        localStorage.setItem("userData", JSON.stringify(result.user));
+      })
       .catch((error) => console.log(error));
   };
 
