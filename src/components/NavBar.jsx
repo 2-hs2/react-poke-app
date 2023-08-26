@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 
 import app from "../../firebase";
@@ -17,6 +18,9 @@ const NavBar = () => {
 
   // navbar 색상 변경 state
   const [show, setShow] = useState(false);
+
+  // 로그인시 받아지는 유저 데이터
+  const [userData, setUserData] = useState({});
 
   // 현재 경로 받아옴
   const { pathname } = useLocation();
@@ -43,7 +47,7 @@ const NavBar = () => {
   // 로그인 팝업 생성
   const handleAuth = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {})
+      .then((result) => setUserData(result.user))
       .catch((error) => console.log(error));
   };
 
@@ -59,11 +63,19 @@ const NavBar = () => {
   // scroll 이벤트 추가 및 삭제
   useEffect(() => {
     window.addEventListener("scroll", listener);
-
     return () => {
       window.removeEventListener("scroll", listener);
     };
   }, []);
+
+  // 로그아웃 함수 -> 로그아웃 되면 userData 비워줌
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        setUserData({});
+      })
+      .catch((error) => alert(error.message));
+  };
 
   return (
     <NavWrapper show={show}>
@@ -76,12 +88,58 @@ const NavBar = () => {
           }}
         />
       </Logo>
-      {pathname === "/login" && (
+      {pathname === "/login" ? (
         <Login onClick={() => handleAuth()}>로그인</Login>
+      ) : (
+        <SignOut>
+          <UserImg src={userData.photoURL} alt="user photo" />
+          <Dropdown>
+            <span onClick={() => handleLogout()}> Sign out </span>
+          </Dropdown>
+        </SignOut>
       )}
     </NavWrapper>
   );
 };
+
+const UserImg = styled.img`
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+`;
+
+const Dropdown = styled.div`
+  position: absolute;
+  top: 48px;
+  right: 0px;
+  background-color: rgb(19, 19, 19);
+  border: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 4px;
+  box-shadow: rgb(000/ 50%) 0px 0px 18px 0px;
+  padding: 10px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  width: 100px;
+  opacity: 0;
+  color: #fff;
+`;
+
+const SignOut = styled.div`
+  position: relative;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    ${Dropdown} {
+      opacity: 1;
+      transition-duration: 1s;
+    }
+  }
+`;
 
 const Login = styled.a`
   background-color: rgba(0, 0, 0, 0.6);
