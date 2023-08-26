@@ -1,13 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-
 import styled from "styled-components";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+import app from "../../firebase";
 
 const NavBar = () => {
+  // signInWithPopup에 필요한 인자들
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
   // navbar 색상 변경 state
   const [show, setShow] = useState(false);
 
+  // 현재 경로 받아옴
   const { pathname } = useLocation();
+
+  // 로그인 팝업 생성
+  const handleAuth = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => console.log(result))
+      .catch((error) => console.log(error));
+  };
 
   // 스크롤 Y 영역이 50이 넘는 경우 show state true 아닌 경우 false로 set 하는 함수
   const listener = () => {
@@ -38,7 +52,9 @@ const NavBar = () => {
           }}
         />
       </Logo>
-      {pathname === "/login" && <Login>로그인</Login>}
+      {pathname === "/login" && (
+        <Login onClick={() => handleAuth()}>로그인</Login>
+      )}
     </NavWrapper>
   );
 };
