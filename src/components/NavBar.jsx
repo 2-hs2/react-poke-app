@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 import app from "../../firebase";
 
@@ -16,10 +21,29 @@ const NavBar = () => {
   // 현재 경로 받아옴
   const { pathname } = useLocation();
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // onAuthStateChaged 는 unsubscribe 함수를 반환함
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // user가 있으면 메인 페이지로 없으면 login 페이지로
+      // 로그인 상태에서는 로그인 페이지로 이동하려고 해도 다시 메인 페이지로 이동된다.
+      if (!user) {
+        navigate("/login");
+      } else if (user && pathname === "/login") {
+        navigate("/");
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [pathname]);
+
   // 로그인 팝업 생성
   const handleAuth = () => {
     signInWithPopup(auth, provider)
-      .then((result) => console.log(result))
+      .then((result) => {})
       .catch((error) => console.log(error));
   };
 
