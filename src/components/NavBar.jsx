@@ -11,6 +11,12 @@ import {
 
 import app from "../../firebase";
 
+// local storage에 유저가 있는 경우 가져오고 아니면 { }
+// initialUserData를 userData state에 초기값으로 넣어준다
+const initialUserData = localStorage.getItem("userData")
+  ? JSON.parse(localStorage.getItem("userData"))
+  : {};
+
 const NavBar = () => {
   // signInWithPopup에 필요한 인자들
   const auth = getAuth(app);
@@ -20,7 +26,7 @@ const NavBar = () => {
   const [show, setShow] = useState(false);
 
   // 로그인시 받아지는 유저 데이터
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(initialUserData);
 
   // 현재 경로 받아옴
   const { pathname } = useLocation();
