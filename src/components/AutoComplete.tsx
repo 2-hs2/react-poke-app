@@ -1,25 +1,37 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { PokemonNameAndUrl } from "../types/PokemonData";
 
-const AutoComplete = ({ allPokemons, setDisplayedPokemons }) => {
+interface AutoCompleteProps {
+  allPokemons: PokemonNameAndUrl[];
+  // set함수 타입 적용 법
+  setDisplayedPokemons: React.Dispatch<
+    React.SetStateAction<PokemonNameAndUrl[]>
+  >;
+}
+
+const AutoComplete = ({
+  allPokemons,
+  setDisplayedPokemons,
+}: AutoCompleteProps) => {
   // App.js에서 가져옴
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // 입력된 값에 일치하는 데이터 반환
-  const filterNames = (input) => {
+  const filterNames = (input: string) => {
     const value = input.toLowerCase();
     return value ? allPokemons.filter((e) => e.name.includes(value)) : [];
   };
 
   // 검색 버튼 누르면 검색된 데이터 빈칸 제거하고 setDisplayedPokemons를 filterNames 함수를 통해 리턴되는 데이터로 저장
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let text = searchTerm.trim();
     setDisplayedPokemons(filterNames(text));
-    setSearchTerm('');
+    setSearchTerm("");
   };
 
-  const checkEqualName = (input) => {
+  const checkEqualName = (input: string) => {
     const filteredArray = filterNames(input.trim());
     // 해당 input이 속해있는 포켓몬을 담은 배열에서 첫번째 포켓몬의 이름이 input과 같으면 빈 배열 반환
     // 즉 해당 포켓몬 이름을 정확히 입력한 경우 빈 배열을 반환하는 것 아닌 경우는 filteredArray 반환
